@@ -1,0 +1,2217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura Void — 25h | The Fleeting Moment. Now in Black.</title>
+  <meta name="description" content="The most anticipated drop in the 25h universe. Sakura Void — reborn in black. Delicate floral. Electric acidity. 25 hours only.">
+
+  <!-- Lenis CSS (required for smooth scroll) -->
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.13/dist/lenis.css">
+
+  <!-- Fonts (25h brand system) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;700&family=JetBrains+Mono:wght@300;400&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    /* ═══════════════════════════════════════════
+       LENIS SMOOTH SCROLL OVERRIDES
+    ═══════════════════════════════════════════ */
+    html.lenis,
+    html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+    .lenis.lenis-smooth iframe { pointer-events: none; }
+
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════ */
+    :root {
+      --bg:          #000000;
+      --bg-2:        #040104;
+      --bg-3:        #080308;
+      --fg:          #e9e7e2;
+      --fg-dim:      #8a8780;
+      --fg-faint:    #3a3838;
+      --line:        rgba(233, 231, 226, 0.07);
+      --sakura:      #c5677a;
+      --sakura-dim:  rgba(197, 103, 122, 0.12);
+      --sakura-glow: rgba(197, 103, 122, 0.4);
+    }
+
+    @property --grad-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    body { line-height: 1.4; letter-spacing: -0.01em; }
+    ::selection { background: var(--sakura); color: #000; }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: var(--sakura); border-radius: 2px; }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-dim);
+    }
+
+    /* ═══════════════════════════════════════════
+       CUSTOM SCROLLBAR (like Gatzara)
+    ═══════════════════════════════════════════ */
+    #sv-scrollbar {
+      position: fixed;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 120px;
+      background: rgba(233,231,226,0.08);
+      z-index: 200;
+      border-radius: 1px;
+    }
+    #sv-scrollbar-thumb {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--sakura);
+      border-radius: 1px;
+      transition: height 0.1s ease;
+    }
+
+    /* ═══════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 40px;
+      mix-blend-mode: difference;
+      pointer-events: none;
+    }
+    .nav > * { pointer-events: auto; }
+    .nav__logo {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.04em;
+      color: #fff;
+      text-decoration: none;
+    }
+    .nav__logo span { color: var(--sakura); filter: brightness(1.5); }
+    .nav__links {
+      display: flex; gap: 28px;
+      list-style: none;
+    }
+    .nav__links a {
+      color: #fff;
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      transition: opacity .3s ease;
+    }
+    .nav__links a:hover { opacity: 1; }
+
+    @media (max-width: 720px) {
+      .nav { padding: 18px 22px; }
+      .nav__links { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════
+       GSAP CLIP-PATH REVEAL — Gatzara style
+       Titles clip from bottom, using a mask wrap
+    ═══════════════════════════════════════════ */
+    .sv-reveal-wrap {
+      overflow: hidden;
+      display: block;
+      padding-bottom: 0.2em; /* prevent descender clipping */
+      margin-bottom: -0.2em;
+    }
+    /* Each line/word inside gets clipped upward */
+    .sv-reveal-line {
+      display: block;
+      transform: translateY(110%);
+      /* GSAP takes over */
+    }
+
+    /* Fade-up blocks (generic) */
+    .sv-fade {
+      opacity: 0;
+      transform: translateY(40px);
+      /* GSAP takes over */
+    }
+
+    /* Staggered children */
+    .sv-stagger > * {
+      opacity: 0;
+      transform: translateY(32px);
+    }
+
+    /* Horizontal marquee band */
+    .marquee-wrap {
+      position: absolute;
+      top: 50%;
+      left: -5%; right: -5%;
+      transform: translateY(-50%) rotate(-3deg);
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .marquee-track {
+      display: flex;
+      white-space: nowrap;
+      gap: 60px;
+    }
+    .marquee-track span {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: clamp(8rem, 16vw, 18rem);
+      letter-spacing: -0.05em;
+      color: rgba(197, 103, 122, 0.03);
+      user-select: none;
+    }
+
+    /* ═══════════════════════════════════════════
+       DOBRA 1 — HERO
+    ═══════════════════════════════════════════ */
+    #hero {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden;
+      background: #000;
+      z-index: 5;
+    }
+    /* Fade out ONLY the UI elements, keeping the final frame canvas visible for the gradient slide-up */
+    #hero.hero--done .hero-inner,
+    #hero.hero--done .hero-orb,
+    #hero.hero--done .hero-kanji,
+    #hero.hero--done #heroMeta,
+    #hero.hero--done .scroll-hint {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+    .hero-inner, .hero-orb, .hero-kanji, #heroMeta, .scroll-hint {
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: #000; /* garante opacidade total — nada vaza por trás */
+    }
+
+    .hero-kanji {
+      position: absolute;
+      right: -0.02em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: clamp(18rem, 38vw, 56rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.07em;
+      color: rgba(197, 103, 122, 0.04);
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+      will-change: transform;
+    }
+
+    .hero-orb {
+      position: absolute;
+      top: 50%; right: 12%;
+      transform: translateY(-50%);
+      width: clamp(300px, 45vw, 700px);
+      height: clamp(300px, 45vw, 700px);
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(197,103,122,0.18) 0%, rgba(197,103,122,0.06) 40%, transparent 70%);
+      filter: blur(60px);
+      animation: orb-breathe 6s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes orb-breathe {
+      0%, 100% { transform: translateY(-50%) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-52%) scale(1.08); opacity: 1; }
+    }
+
+    .petal {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50% 0 50% 0;
+      background: rgba(197, 103, 122, 0.35);
+      pointer-events: none;
+      animation: petal-fall linear infinite;
+    }
+    @keyframes petal-fall {
+      0% { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(110vh) rotate(720deg) translateX(80px); opacity: 0; }
+    }
+
+    .hero-inner {
+      position: relative; z-index: 3;
+      padding: clamp(80px, 10vh, 140px) 40px clamp(40px, 8vh, 100px);
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 60px;
+      min-height: 100vh;
+    }
+
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: clamp(12px, 2vh, 24px);
+    }
+    .hero-eyebrow .bar { width: 28px; height: 1px; background: var(--sakura); }
+    .hero-eyebrow .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sakura);
+    }
+
+    .hero-h1 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: clamp(2.4rem, min(6.5vw, 8.5vh), 7.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      color: var(--fg);
+      margin-bottom: clamp(12px, 2vh, 24px);
+      text-wrap: balance;
+    }
+    h1 em, h2 em, .concept-line em, .specs-title em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--sakura);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-descriptor {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: clamp(0.9rem, min(1.5vw, 2.2vh), 1.25rem);
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+      color: var(--fg-dim);
+      max-width: 440px;
+      margin-bottom: clamp(20px, 3.5vh, 36px);
+    }
+
+    .hero-cta { display: flex; align-items: center; gap: clamp(12px, 2vh, 24px); flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 36px;
+      background: var(--sakura);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      border: none; cursor: pointer;
+      border-radius: 99px;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: #d97a8d;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(197,103,122,0.45);
+    }
+    .btn-ghost {
+      display: inline-flex; align-items: center;
+      padding: 14px 36px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 99px;
+      
+      /* Liquid Glass styling from premium spec */
+      background: rgba(255, 255, 255, 0.015);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 8px 32px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .btn-ghost::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.2px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.1) 80%, rgba(255,255,255,0.4) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .btn-ghost:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 12px 40px rgba(197,103,122,0.15);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      will-change: transform;
+    }
+
+    .can-mockup {
+      position: relative;
+      width: clamp(200px, 28vw, 380px);
+      height: clamp(400px, 56vw, 760px);
+      margin: 0 auto;
+    }
+    .can-body {
+      width: 100%; height: 100%;
+      border-radius: 30% 30% 30% 30% / 6% 6% 6% 6%;
+      background: linear-gradient(135deg, #111 0%, #000 30%, #0a0a0a 50%, #111 70%, #000 100%);
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        inset -8px 0 24px rgba(197,103,122,0.06),
+        inset 4px 0 12px rgba(255,255,255,0.03),
+        0 0 80px rgba(197,103,122,0.15),
+        0 40px 120px rgba(0,0,0,0.8);
+    }
+    .can-sheen {
+      position: absolute; inset: 0;
+      background: linear-gradient(100deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.04) 30%,
+        rgba(255,255,255,0.08) 40%,
+        rgba(255,255,255,0.04) 50%,
+        rgba(255,255,255,0) 70%
+      );
+      pointer-events: none;
+    }
+    .can-branch { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); width: 80%; }
+    .can-branch svg { width: 100%; height: auto; }
+
+    .can-brand-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; z-index: 2;
+    }
+    .can-brand-text .brand-25h {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 3.5vw, 3.2rem);
+      letter-spacing: -0.05em;
+      color: rgba(233, 231, 226, 0.9);
+      display: block; line-height: 1;
+    }
+    .can-brand-text .brand-sakura {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(0.55rem, 1vw, 0.8rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--sakura);
+      display: block; margin-top: 4px;
+    }
+    .can-brand-text .brand-kanji-small {
+      font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+      font-weight: 400;
+      color: rgba(197,103,122,0.6);
+      display: block; margin-top: 8px;
+    }
+    .can-kanji-side {
+      position: absolute; left: 8%; top: 20%;
+      writing-mode: vertical-rl; text-orientation: mixed;
+      font-size: clamp(0.6rem, 1.2vw, 1rem);
+      font-weight: 400; letter-spacing: 0.3em;
+      color: rgba(197, 103, 122, 0.3);
+      pointer-events: none;
+    }
+    .can-kanji-side-r { right: 8%; left: auto; }
+    .can-top {
+      position: absolute; top: -1%; left: 50%;
+      transform: translateX(-50%);
+      width: 70%; height: 8%;
+      background: linear-gradient(180deg, #1a1a1a, #111);
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .can-petal {
+      position: absolute;
+      border-radius: 50% 0 50% 0;
+      background: rgba(197, 103, 122, 0.5);
+      animation: can-petal-float ease-in-out infinite;
+    }
+    @keyframes can-petal-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-16px) rotate(25deg); }
+    }
+
+    .hero-meta-row {
+      position: absolute;
+      bottom: 40px; left: 40px; right: 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 3;
+    }
+    .hero-meta-row .item { display: flex; flex-direction: column; gap: 4px; }
+    .hero-meta-row .item .mono { color: var(--fg-faint); }
+    .hero-meta-row .item .val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; letter-spacing: 0.04em; color: var(--fg);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px; left: 50%; transform: translateX(-50%);
+      z-index: 4;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      color: var(--fg-faint);
+    }
+    .scroll-hint__line {
+      width: 1px; height: 40px;
+      background: linear-gradient(180deg, transparent, var(--sakura));
+      animation: pulse-line 2.6s ease-in-out infinite;
+    }
+    @keyframes pulse-line {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding: 100px 22px 80px;
+        gap: 40px; min-height: auto;
+      }
+      .hero-meta-row { display: none; }
+    }
+
+    /* ═══════════════════════════════════════════
+       DOBRA 2 — CONCEPT
+    ═══════════════════════════════════════════ */
+    #concept {
+      position: relative;
+      min-height: 100vh;
+      padding: clamp(40px, 10vh, 140px) 40px;
+      display: flex; flex-direction: column; justify-content: center;
+      background: linear-gradient(to bottom, transparent 0%, var(--bg-2) 150px, var(--bg-2) 100%);
+      border-top: none;
+      overflow: hidden;
+    }
+    #concept::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 20%, rgba(197,103,122,0.06) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .concept-jp-bg {
+      position: absolute;
+      bottom: -0.1em; right: -0.03em;
+      font-size: clamp(12rem, 26vw, 30rem);
+      font-weight: 700;
+      color: rgba(197, 103, 122, 0.025);
+      pointer-events: none; user-select: none;
+      line-height: 1; letter-spacing: -0.06em;
+      will-change: transform;
+    }
+    .concept-inner {
+      max-width: 1280px; width: 100%;
+      margin: 0 auto; position: relative; z-index: 2;
+    }
+    .dobra-eyebrow {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: clamp(24px, 6vh, 64px);
+    }
+    .dobra-eyebrow .num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; color: var(--fg-faint);
+    }
+    .dobra-eyebrow .bar { width: 28px; height: 1px; background: var(--fg-faint); }
+    .dobra-eyebrow .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg);
+    }
+    .concept-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: start;
+    }
+    .concept-stack { display: flex; flex-direction: column; }
+    .concept-line {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: clamp(2rem, min(5.5vw, 7vh), 5.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      color: var(--fg);
+    }
+    .concept-line.dim { color: var(--fg-dim); }
+    .concept-line em { font-style: italic; color: var(--sakura); }
+
+    .concept-details {
+      padding-top: clamp(10px, 3vh, 20px);
+      display: flex; flex-direction: column; gap: clamp(16px, 4vh, 32px);
+    }
+    .detail-block {
+      border-left: 1px solid var(--line);
+      padding-left: 20px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .detail-block .d-label { font-size: 10px; }
+    .detail-block .d-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; letter-spacing: 0.04em; color: var(--fg);
+    }
+    .kanji-list { margin-top: clamp(24px, 5vh, 48px); display: flex; flex-direction: column; }
+    .kanji-row {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 20px; align-items: baseline;
+      padding: clamp(8px, 2vh, 16px) 0; border-bottom: 1px solid var(--line);
+    }
+    .kanji-row:first-child { border-top: 1px solid var(--line); }
+    .kanji-row .k-sym { font-size: 1.6rem; font-weight: 400; color: var(--sakura); line-height: 1; }
+    .kanji-row .k-info { display: flex; flex-direction: column; gap: 3px; }
+    .kanji-row .k-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim);
+    }
+    .kanji-row .k-meaning { font-size: 14px; font-weight: 400; color: var(--fg); letter-spacing: -0.01em; }
+
+    @media (max-width: 900px) {
+      #concept { padding: 100px 22px; }
+      .concept-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ═══════════════════════════════════════════
+       DOBRA 3 — FLAVOR STORY
+    ═══════════════════════════════════════════ */
+    #story {
+      position: relative;
+      min-height: 100vh;
+      background: var(--bg);
+      border-top: none;
+      overflow: hidden;
+    }
+    .story-bg-parallax {
+      position: absolute;
+      top: -5vh; left: 0;
+      width: 100vw;
+      height: 110vh;
+      background: url('story-bg.jpg') center right / cover no-repeat;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .story-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--bg-2) 0%, transparent 15%, transparent 85%, var(--bg) 100%),
+                  linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 40%, transparent 80%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .story-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%; max-width: 1280px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(40px, 10vh, 120px) 40px;
+    }
+    .story-content {
+      max-width: 580px;
+      position: relative;
+      z-index: 1;
+    }
+    .story-kanji-bg {
+      position: absolute;
+      top: 50%; left: -20px;
+      transform: translateY(-50%);
+      font-size: clamp(8rem, min(25vw, 40vh), 22rem);
+      font-weight: 700; line-height: 1; letter-spacing: -0.06em;
+      color: rgba(197, 103, 122, 0.08);
+      pointer-events: none; user-select: none;
+      z-index: 0; will-change: transform;
+    }
+
+    .flavor-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: clamp(2rem, min(6.5vw, 9vh), 7rem);
+      line-height: 0.95; letter-spacing: -0.05em;
+      color: #e8d0d8; margin-bottom: clamp(20px, 5vh, 48px); text-wrap: balance;
+    }
+    .flavor-body { display: flex; flex-direction: column; margin-bottom: clamp(20px, 4vh, 40px); }
+    .flavor-body p {
+      font-family: 'Inter', sans-serif; font-weight: 400;
+      font-size: clamp(1rem, min(2.2vw, 2.5vh), 1.9rem);
+      line-height: 1.2; letter-spacing: -0.025em;
+      color: var(--fg-dim);
+      padding: clamp(8px, 1.5vh, 14px) 0; border-top: 1px solid var(--line);
+    }
+    .flavor-body p:first-child { color: var(--fg); font-weight: 400; }
+    .flavor-body p:last-child { border-bottom: 1px solid var(--line); }
+    .flavor-pills { display: flex; align-items: center; gap: clamp(8px, 2vh, 16px); flex-wrap: wrap; }
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 8px 18px; border-radius: 99px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid var(--sakura); color: var(--sakura); opacity: 0.8;
+    }
+    .pill-mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; color: var(--fg-dim); }
+    .story-right { position: relative; overflow: hidden; background: #04010a; }
+    .story-visual {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .story-pattern {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(197,103,122,0.15) 0%, transparent 55%),
+        radial-gradient(circle at 80% 80%, rgba(197,103,122,0.06) 0%, transparent 40%);
+    }
+    .story-branch-wrap { position: relative; z-index: 2; width: 70%; will-change: transform; }
+    .palette-strip {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 3;
+    }
+    .palette-swatch {
+      width: 44px; height: 8px; border-radius: 99px;
+      transition: transform 0.3s ease;
+    }
+    .palette-swatch:hover { transform: scaleX(1.5) scaleY(1.5); }
+    .story-right::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, #000 0%, rgba(0,0,0,0) 25%);
+      pointer-events: none; z-index: 1;
+    }
+    @media (max-width: 900px) {
+      .story-split { grid-template-columns: 1fr; }
+      .story-right { height: 60vw; }
+      .story-left { padding: 48px 22px 60px; justify-content: flex-start; }
+    }
+
+    /* ═══════════════════════════════════════════
+       DOBRA 4 — LORE
+    ═══════════════════════════════════════════ */
+    #lore {
+      position: relative;
+      min-height: 100vh; padding: clamp(40px, 10vh, 120px) 40px;
+      border-top: 1px solid var(--line);
+      overflow: hidden;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .lore-bg-parallax {
+      position: absolute;
+      top: -5vh; left: 0;
+      width: 100vw;
+      height: 110vh;
+      background: url('lore-bg.jpg') center center / cover no-repeat;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .lore-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, var(--bg) 0%, transparent 15%, transparent 85%, var(--bg) 100%),
+                  rgba(4, 1, 4, 0.75);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .lore-inner { max-width: 1280px; width: 100%; margin: 0 auto; position: relative; z-index: 2; }
+    .lore-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: start; }
+    .lore-geo .city {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--fg-dim); margin-bottom: clamp(20px, 5vh, 40px); display: block;
+    }
+    .lore-symbol { font-size: clamp(4rem, min(12vw, 15vh), 12rem); font-weight: 400; line-height: 1; letter-spacing: -0.04em; color: var(--sakura); display: block; }
+    .lore-symbol-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--sakura); margin-top: clamp(8px, 2vh, 14px); display: block;
+    }
+    .lore-symbol-def { font-size: 14px; font-weight: 400; color: var(--fg-dim); line-height: 1.6; max-width: 300px; margin-top: 8px; }
+    .lore-text { display: flex; flex-direction: column; gap: clamp(16px, 3vh, 28px); padding-top: clamp(40px, 8vh, 80px); }
+    .lore-text p {
+      font-family: 'Inter', sans-serif; font-weight: 400;
+      font-size: clamp(0.95rem, min(1.6vw, 2.5vh), 1.2rem);
+      line-height: 1.7; letter-spacing: -0.015em; color: var(--fg-dim);
+    }
+    .lore-text p.highlight { color: var(--fg); font-weight: 400; font-size: clamp(1.05rem, 1.9vw, 1.4rem); }
+    .lore-text p.closing {
+      color: var(--fg-dim); font-style: italic;
+      border-top: 1px solid var(--line); padding-top: 28px; margin-top: 12px;
+    }
+    .jp-terms { margin-top: clamp(24px, 6vh, 48px); display: flex; flex-direction: column; }
+    .jp-term-row {
+      display: grid; grid-template-columns: 64px 1fr;
+      gap: 24px; align-items: baseline;
+      padding: clamp(8px, 2vh, 14px) 0; border-bottom: 1px solid var(--line);
+    }
+    .jp-term-row:first-child { border-top: 1px solid var(--line); }
+    .jp-term-row .jp-char { font-size: 1.6rem; font-weight: 400; color: var(--sakura); line-height: 1; }
+    .jp-term-row .jp-info { display: flex; flex-direction: column; gap: 3px; }
+    .jp-term-row .jp-romaji {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-dim);
+    }
+    .jp-term-row .jp-meaning { font-size: 13px; font-weight: 400; color: var(--fg); letter-spacing: -0.01em; }
+    @media (max-width: 900px) {
+      #lore { padding: 80px 22px; }
+      .lore-grid { grid-template-columns: 1fr; gap: 56px; }
+      .lore-text { padding-top: 0; }
+    }
+
+    /* ═══════════════════════════════════════════
+       DOBRA 5 — SPECS
+    ═══════════════════════════════════════════ */
+    #specs {
+      position: relative;
+      min-height: 100vh; padding: clamp(40px, 10vh, 120px) 40px;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      display: flex; flex-direction: column; justify-content: center;
+      overflow: hidden;
+    }
+    .specs-inner { max-width: 1280px; width: 100%; margin: 0 auto; position: relative; z-index: 2; }
+    .specs-head { margin-bottom: clamp(40px, 8vh, 80px); }
+    .specs-title {
+      font-family: 'Inter', sans-serif; font-weight: 400;
+      font-size: clamp(2.5rem, min(6.5vw, 8vh), 7rem);
+      line-height: 0.96; letter-spacing: -0.05em; color: var(--fg); margin-bottom: clamp(8px, 2vh, 16px);
+    }
+    .specs-title em { font-style: italic; color: var(--sakura); }
+    .specs-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--fg-faint); max-width: 480px; line-height: 1.7;
+    }
+    .specs-body { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 8vh, 80px); align-items: start; }
+    .specs-table { display: flex; flex-direction: column; }
+    .spec-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px; padding: clamp(10px, 2.5vh, 18px) 0; border-bottom: 1px solid var(--line);
+    }
+    .spec-row:first-child { border-top: 1px solid var(--line); }
+    .spec-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint);
+    }
+    .spec-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.04em; color: var(--fg); }
+    .spec-value.accent { color: var(--sakura); }
+    .color-display { display: flex; flex-direction: column; gap: clamp(10px, 2vh, 16px); }
+    .color-display .c-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 8px;
+    }
+    .color-bars { display: flex; flex-direction: column; gap: 10px; }
+    .color-bar-row { display: flex; align-items: center; gap: 16px; }
+    .color-bar {
+      height: 44px; border-radius: 22px; flex: 1;
+      cursor: default; transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .color-bar:hover { transform: scaleX(1.02); }
+    .color-bar-info { display: flex; flex-direction: column; gap: 2px; min-width: 100px; }
+    .color-bar-name { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; color: var(--fg); }
+    .color-bar-hex { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: var(--fg-faint); }
+    @media (max-width: 900px) {
+      #specs { padding: 80px 22px; }
+      .specs-body { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    /* ═══════════════════════════════════════════
+       DOBRA 6 — TIMER
+    ═══════════════════════════════════════════ */
+    #timer {
+      min-height: 100vh;
+      background: #030103;
+      border-top: 1px solid rgba(197,103,122,0.1);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: clamp(40px, 10vh, 80px) 24px;
+      position: relative; overflow: hidden;
+    }
+    .timer-bg-kanji {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(20rem, 50vw, 70rem);
+      font-weight: 700; color: rgba(197, 103, 122, 0.025);
+      pointer-events: none; user-select: none; line-height: 1;
+    }
+    .timer-glow {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(197,103,122,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      animation: timer-glow-pulse 4s ease-in-out infinite;
+    }
+    @keyframes timer-glow-pulse {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    }
+    .timer-header {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--sakura); margin-bottom: clamp(8px, 2vh, 16px); text-align: center;
+      position: relative; z-index: 2;
+    }
+    .timer-subtitle {
+      font-family: 'Inter', sans-serif; font-weight: 400;
+      font-size: clamp(1.2rem, min(3vw, 3.5vh), 2rem); letter-spacing: -0.03em;
+      color: var(--fg-dim); margin-bottom: clamp(32px, 7vh, 64px); text-align: center;
+      position: relative; z-index: 2;
+    }
+    .timer-border-wrap {
+      position: relative; padding: 2px; border-radius: 8px;
+      background: conic-gradient(from var(--grad-angle), #c5677a, #8b2252, #ff9fb8, #e8d0d8, #c5677a);
+      animation: timer-rotate 5s linear infinite;
+      z-index: 2;
+    }
+    .timer-border-wrap::before {
+      content: ''; position: absolute; inset: -10px; border-radius: 16px;
+      background: conic-gradient(from var(--grad-angle), #c5677a, #8b2252, #ff9fb8, #e8d0d8, #c5677a);
+      filter: blur(24px); opacity: 0.25;
+      animation: timer-rotate 5s linear infinite, timer-glow-border 2.5s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+    @keyframes timer-rotate { to { --grad-angle: 360deg; } }
+    @keyframes timer-glow-border { from { opacity: 0.25; } to { opacity: 0.55; } }
+    .timer-inner {
+      background: #07020a; border-radius: 6px; padding: clamp(36px, 6vh, 56px) clamp(40px, 8vw, 80px);
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .timer-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(197,103,122,0.5);
+    }
+    #ct-display {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: clamp(3.5rem, min(7vw, 10vh), 7rem);
+      letter-spacing: 0.08em; color: #F0EAF8;
+      font-variant-numeric: tabular-nums; line-height: 1;
+      transition: opacity 0.5s ease;
+    }
+    #ct-yours {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      font-size: clamp(3.5rem, min(7vw, 10vh), 7rem);
+      letter-spacing: 0.08em; color: var(--sakura);
+      opacity: 0; position: absolute;
+      transition: opacity 0.6s ease;
+      animation: sakura-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes sakura-pulse {
+      0%, 100% { text-shadow: 0 0 20px rgba(197,103,122,0.4); }
+      50% { text-shadow: 0 0 48px rgba(197,103,122,0.9), 0 0 80px rgba(139,34,82,0.4); }
+    }
+    .timer-dividers { display: flex; gap: 24px; margin-top: 4px; }
+    .timer-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .timer-unit .t-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(197,103,122,0.4);
+    }
+    .timer-footer {
+      margin-top: clamp(32px, 6vh, 56px); display: flex; flex-direction: column;
+      align-items: center; gap: 12px; position: relative; z-index: 2;
+    }
+    .timer-footer .brand { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -0.04em; color: var(--fg); }
+    .timer-footer .brand span { color: var(--sakura); }
+    .timer-footer .tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-faint);
+    }
+    .timer-cta { margin-top: clamp(16px, 4vh, 32px); display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    @media (max-width: 720px) {
+      .timer-inner { padding: 36px 40px; }
+      #ct-display { font-size: clamp(2.8rem, 10vw, 5rem); }
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════ */
+    .footer {
+      padding: 48px 40px 28px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--fg-faint); gap: 20px; flex-wrap: wrap;
+    }
+    .footer .brand { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.04em; color: var(--fg); }
+    .footer .brand span { color: var(--sakura); }
+    .footer .copy { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; }
+    @media (max-width: 720px) { .footer { padding: 32px 22px 20px; } }
+
+    /* ═══════════════════════════════════════════
+       STACKING CARDS — deck-of-cards effect
+    ═══════════════════════════════════════════ */
+
+    /* ── wrapper ── */
+    .stack-wrapper {
+      position: relative;
+    }
+
+    /* ── cada seção fica dentro de um slot com altura de scroll ── */
+    .stack-slot {
+      height: 200vh;
+    }
+    .stack-slot:last-child {
+      height: 100vh;
+    }
+
+    /*
+     * FIX: espaço preto entre seções.
+     *
+     * O problema: com height:200vh, o card sticky se solta do topo
+     * depois de 100vh e os outros 100vh aparecem como preto antes do
+     * próximo slot começar.
+     *
+     * A solução: cada slot (exceto o primeiro) recua 100vh para cima,
+     * fazendo o scroll-room do slot anterior ser "consumido" enquanto
+     * o próximo card já está subindo. O z-index inline nos <section>
+     * garante que cada card novo fique sobre o anterior.
+     */
+    .stack-slot + .stack-slot {
+      margin-top: -100vh;
+    }
+
+    /* O hero é um overlay FIXED (fora do fluxo). O #hero-slot fica
+       vazio só para reservar o scroll-room da sequência de frames.
+       A primeira card (concept) NÃO recua -100vh contra ele, senão
+       começaria por baixo do overlay e apareceria cedo. */
+    #hero-slot + .stack-slot {
+      margin-top: 0;
+    }
+
+    /* Hero slot: altura definida pelo JS (100vh + sequência de frames).
+       Como o hero é fixed, este slot só gera o espaço de scroll. */
+    #hero-slot {
+      height: 300vh; /* fallback; sobrescrito pelo JS */
+    }
+
+    /* ── every section: sticky card ── */
+    .stack-section {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      transform-origin: top center;
+      will-change: transform;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* ── Non-hero sections look like physical cards ── */
+    .stack-section:not(#hero) {
+      border-radius: 24px 24px 0 0;
+      box-shadow:
+        0 -2px 0 rgba(197,103,122,0.15),
+        0 -12px 48px rgba(0,0,0,0.7),
+        0 -1px 0 rgba(255,255,255,0.03);
+    }
+
+    /* ── Section-specific padding / overrides ── */
+    /* Hero: sticky definido na regra base (#hero, linha ~200).
+       O frame scrub roda sobre a altura extra do #hero-slot. */
+    #concept { padding: 60px 40px 40px; }
+    #story   { padding: 0; display: block; }
+    #lore    { padding: 60px 40px 40px; }
+    #specs   { padding: 60px 40px 40px; }
+    #timer   { padding: 40px 24px; }
+
+    /* ── Compact specific elements to fit 100vh ── */
+    /* Concept */
+    #concept .dobra-eyebrow { margin-bottom: 32px; }
+    #concept .kanji-list    { margin-top: 20px; }
+    #concept .kanji-row     { padding: 10px 0; }
+    #concept .concept-line  { font-size: clamp(1.5rem, 4vw, 4rem); }
+    /* Lore */
+    #lore .dobra-eyebrow    { margin-bottom: 40px; }
+    #lore .lore-grid        { gap: 48px; }
+    #lore .lore-text        { padding-top: 0; gap: 12px; }
+    #lore .lore-text p      { font-size: 0.9rem; line-height: 1.5; }
+    #lore .jp-terms         { margin-top: 24px; }
+    #lore .jp-term-row      { padding: 9px 0; }
+    #lore .lore-symbol      { font-size: clamp(3rem, 8vw, 8rem); }
+    #lore .lore-symbol-def  { font-size: 12px; margin-top: 4px; }
+    /* Specs */
+    #specs .dobra-eyebrow   { margin-bottom: 28px; }
+    #specs .specs-head      { margin-bottom: 24px; }
+    #specs .specs-title     { font-size: clamp(2rem, 4vw, 4.5rem); }
+    #specs .specs-sub       { display: none; }  /* hidden to save space */
+    #specs .specs-body      { gap: 32px; }
+    #specs .spec-row        { padding: 10px 0; }
+    .color-bars             { gap: 6px; }
+    .color-bar              { height: 32px; }
+    /* Timer */
+    .timer-subtitle   { margin-bottom: 28px; font-size: clamp(1rem,2.2vw,1.5rem); }
+    .timer-footer     { margin-top: 24px; }
+    .timer-inner      { padding: 32px 64px; }
+    #ct-display       { font-size: clamp(2rem, 12vw, 5.5rem); }
+    /* Story: keep its split layout full height */
+    .story-split      { height: 100vh; }
+
+    /* ── Mobile compacting ── */
+    @media (max-width: 900px) {
+      /* Unlock fixed cards to allow full scrolling of long content */
+      .stack-slot:not(#hero-slot) { height: auto !important; margin-top: 0 !important; }
+      .stack-section:not(#hero) {
+        position: relative !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: 100vh;
+        overflow: hidden !important;
+        border-radius: 0 !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+
+      /* 3:4 Mobile Images for Dobras 2 and 3 */
+      .story-bg-parallax {
+        background: url('story-bg-mobile.jpg') center center / cover no-repeat !important;
+        top: -10vh !important; height: 120% !important; min-height: 120vh !important;
+      }
+      .lore-bg-parallax {
+        background: url('lore-bg-mobile.jpg') center center / cover no-repeat !important;
+        top: -10vh !important; height: 120% !important; min-height: 120vh !important;
+      }
+
+      #hero .hero-inner { grid-template-columns: 1fr; padding: clamp(60px, 10vh, 120px) 22px clamp(40px, 8vh, 100px); gap: 24px; }
+      #concept { padding: clamp(40px, 8vh, 80px) 22px clamp(32px, 6vh, 60px); }
+      #lore    { padding: clamp(40px, 8vh, 80px) 22px clamp(32px, 6vh, 60px); }
+      #specs   { padding: clamp(40px, 8vh, 80px) 22px clamp(32px, 6vh, 60px); }
+      .lore-grid { grid-template-columns: 1fr !important; gap: 32px; }
+      .story-split { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
+      .story-right { height: 45vh; }
+      .story-left  { padding: clamp(40px, 8vh, 80px) 22px clamp(32px, 6vh, 60px); justify-content: flex-start; }
+      .timer-inner { padding: 28px 22px; }
+      .scroll-hint { display: none; }
+    }
+
+    /* UTILS */
+    [will-change] { will-change: transform; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Global Petals Canvas -->
+<canvas id="sv-petals" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 90; opacity: 0; transition: opacity 1s ease;"></canvas>
+
+<!-- Custom scrollbar indicator (Gatzara style) -->
+<div id="sv-scrollbar">
+  <div id="sv-scrollbar-thumb"></div>
+</div>
+
+<!-- NAV — fixed, outside stack context so mix-blend-mode works freely -->
+<nav class="nav" id="main-nav">
+  <a href="#hero" class="nav__logo">25h <span>·</span> sakura</a>
+  <ul class="nav__links">
+    <li><a href="#concept">Concept</a></li>
+    <li><a href="#story">Flavor</a></li>
+    <li><a href="#lore">Lore</a></li>
+    <li><a href="#specs">Specs</a></li>
+    <li><a href="#timer">Drop</a></li>
+  </ul>
+</nav>
+
+<!-- STACK WRAPPER: carries the total scroll height -->
+<!-- Each section inside becomes sticky + 100vh -->
+<div class="stack-wrapper" id="stackWrapper">
+<!-- stack-slots adicionados para o sticky funcionar -->
+
+<!-- ═══════════════════════════════════════════
+     DOBRA 1 — HERO
+═══════════════════════════════════════════ -->
+<div class="stack-slot" id="hero-slot"><section id="hero" class="stack-section" style="z-index:1">
+  <div class="hero-bg" id="heroBg">
+    <canvas id="hero-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; opacity: 1; pointer-events: none; z-index: 1;"></canvas>
+    <!-- véu escuro POR CIMA do canvas para manter o texto legível -->
+    <div style="position:absolute; inset:0; z-index:2; pointer-events:none;
+                background: linear-gradient(90deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.45) 100%);"></div>
+  </div>
+  
+  <!-- Sleek loading indicator for frames sequence -->
+  <div id="hero-loader" style="position: absolute; inset: 0; background: #000; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; pointer-events: none;">
+    <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sakura); margin-bottom: 16px;">Preloading Frames</div>
+    <div style="width: 120px; height: 1px; background: rgba(255,255,255,0.08); position: relative;">
+      <div id="loader-bar" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--sakura); transition: width 0.1s ease;"></div>
+    </div>
+    <div id="loader-text" style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--fg-dim); margin-top: 8px; letter-spacing: 0.05em;">0%</div>
+  </div>
+  <div class="hero-orb"></div>
+  <div class="hero-kanji" id="heroKanji">桜</div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <span class="bar"></span>
+        <span class="label">Sakura Void · 01 / 04</span>
+      </div>
+
+      <h1 class="hero-h1">
+        <span class="sv-reveal-wrap"><span class="sv-reveal-line">The fleeting</span></span>
+        <span class="sv-reveal-wrap"><span class="sv-reveal-line">moment,</span></span>
+        <span class="sv-reveal-wrap"><span class="sv-reveal-line"><em>now in black.</em></span></span>
+      </h1>
+
+      <p class="hero-descriptor sv-fade">
+        Delicate floral. Electric acidity. The taste of beautiful transience.
+        25h Sakura Void returns — reborn in pitch black. 刹那.
+      </p>
+
+      <div class="hero-cta sv-fade">
+        <a href="#timer" class="btn-primary" id="hero-notify-btn">
+          ↓ &nbsp; Join the Drop
+        </a>
+        <a href="#story" class="btn-ghost">Discover the flavor</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-meta-row sv-fade" id="heroMeta">
+    <div class="item">
+      <span class="mono">↳ Flavor origin</span>
+      <span class="val">Tokyo, JP</span>
+    </div>
+    <div class="scroll-hint">
+      <span class="mono">scroll</span>
+      <span class="scroll-hint__line"></span>
+    </div>
+    <div class="item" style="text-align:right">
+      <span class="mono">↳ Vol</span>
+      <span class="val">450ml · Black Edition</span>
+    </div>
+  </div>
+</section></div>
+
+<!-- ═══════════════════════════════════════════
+     DOBRA 2 — CONCEPT
+═══════════════════════════════════════════ -->
+<div class="stack-slot"><section id="concept" class="stack-section" style="z-index:2">
+  <div class="concept-jp-bg" id="conceptJpBg">桜</div>
+  <div class="concept-inner">
+    <div class="dobra-eyebrow sv-fade">
+      <span class="num">01</span>
+      <span class="bar"></span>
+      <span class="label">The Concept</span>
+    </div>
+    <div class="concept-grid">
+      <div class="concept-stack">
+        <span class="concept-line">
+          <span class="sv-reveal-wrap"><span class="sv-reveal-line">The black can.</span></span>
+        </span>
+        <span class="concept-line">
+          <span class="sv-reveal-wrap"><span class="sv-reveal-line"><em>The void.</em></span></span>
+        </span>
+        <span class="concept-line dim">
+          <span class="sv-reveal-wrap"><span class="sv-reveal-line">Where the cherry blossom</span></span>
+        </span>
+        <span class="concept-line dim">
+          <span class="sv-reveal-wrap"><span class="sv-reveal-line">blooms in the dark.</span></span>
+        </span>
+      </div>
+      <div class="concept-details sv-stagger">
+        <div class="detail-block">
+          <span class="mono">↳ The shift</span>
+          <span class="d-val">Sakura × Black</span>
+        </div>
+        <div class="detail-block">
+          <span class="mono">↳ Territory</span>
+          <span class="d-val">Tokyo · 03:00 AM</span>
+        </div>
+        <div class="detail-block">
+          <span class="mono">↳ Energy format</span>
+          <span class="d-val">450ml · Unlocks +1h</span>
+        </div>
+        <div class="detail-block">
+          <span class="mono">↳ Drop window</span>
+          <span class="d-val">25 hours only</span>
+        </div>
+        <div class="kanji-list">
+          <div class="kanji-row">
+            <span class="k-sym">刹那</span>
+            <div class="k-info">
+              <span class="k-name">Setsuna</span>
+              <span class="k-meaning">The briefest unit of time. A moment that barely exists.</span>
+            </div>
+          </div>
+          <div class="kanji-row">
+            <span class="k-sym">桜</span>
+            <div class="k-info">
+              <span class="k-name">Sakura</span>
+              <span class="k-meaning">Cherry blossom. Beauty in impermanence.</span>
+            </div>
+          </div>
+          <div class="kanji-row">
+            <span class="k-sym">虚</span>
+            <div class="k-info">
+              <span class="k-name">Void / Kyo</span>
+              <span class="k-meaning">Emptiness. The space where energy is born.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<!-- ═══════════════════════════════════════════
+     DOBRA 3 — FLAVOR STORY
+═══════════════════════════════════════════ -->
+<div class="stack-slot" id="story-slot"><section id="story" class="stack-section" style="z-index:3">
+  <!-- Parallax Background -->
+  <div class="story-bg-parallax"></div>
+  <div class="story-bg-overlay"></div>
+
+  <div class="story-inner">
+    <div class="story-kanji-bg" id="storyKanjiBg">刹那</div>
+    <div class="story-content">
+      <div class="dobra-eyebrow sv-fade" style="margin-bottom: clamp(20px, 5vh, 40px);">
+        <span class="num">02</span>
+        <span class="bar" style="background:var(--sakura)"></span>
+        <span class="label" style="color:var(--sakura)">Sakura Void</span>
+      </div>
+      <h2 class="flavor-title">
+        <span class="sv-reveal-wrap"><span class="sv-reveal-line">The fleeting</span></span>
+        <span class="sv-reveal-wrap"><span class="sv-reveal-line">moment.</span></span>
+      </h2>
+      <div class="flavor-body sv-stagger">
+        <p>The taste of beautiful transience.</p>
+        <p>Delicate floral, electric acidity.</p>
+        <p>Cherry blossom on black, at 3am.</p>
+        <p>The hour that shouldn't exist — but does.</p>
+      </div>
+      <div class="flavor-pills sv-fade">
+        <span class="pill">JP · 桜</span>
+        <span class="pill-mono mono">450ml = unlocks +1h</span>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<!-- ═══════════════════════════════════════════
+     DOBRA 4 — LORE
+═══════════════════════════════════════════ -->
+<div class="stack-slot"><section id="lore" class="stack-section" style="z-index:4">
+  <div class="lore-bg-parallax" id="loreBgParallax"></div>
+  <div class="lore-bg-overlay"></div>
+  <div class="lore-inner">
+    <div class="dobra-eyebrow sv-fade" style="margin-bottom:40px">
+      <span class="num">03</span>
+      <span class="bar"></span>
+      <span class="label">The Lore</span>
+    </div>
+    <div class="lore-grid">
+      <div class="lore-geo sv-fade">
+        <span class="city">Tokyo · 03:00 AM · JP</span>
+        <div>
+          <span class="lore-symbol">刹那</span>
+          <span class="lore-symbol-name">Setsuna — The Briefest Moment</span>
+          <p class="lore-symbol-def">The Japanese concept of the smallest possible unit of time. A moment so brief it barely exists — like the 25th hour, like a falling petal.</p>
+        </div>
+        <div class="jp-terms sv-stagger">
+          <div class="jp-term-row"><span class="jp-char">刹</span><div class="jp-info"><span class="jp-romaji">Setsu</span><span class="jp-meaning">A razor-thin instant. The cut of time.</span></div></div>
+          <div class="jp-term-row"><span class="jp-char">那</span><div class="jp-info"><span class="jp-romaji">Na</span><span class="jp-meaning">That which is barely there. The gap.</span></div></div>
+          <div class="jp-term-row"><span class="jp-char">桜</span><div class="jp-info"><span class="jp-romaji">Sakura</span><span class="jp-meaning">Cherry blossom. Ephemeral. Absolute.</span></div></div>
+          <div class="jp-term-row"><span class="jp-char">虚</span><div class="jp-info"><span class="jp-romaji">Kyo / Void</span><span class="jp-meaning">Emptiness that contains everything.</span></div></div>
+        </div>
+      </div>
+      <div class="lore-text sv-stagger">
+        <p class="highlight">The cherry blossom that blooms in the dark.</p>
+        <p>Engraved on the black can because that's exactly what the 25th hour is — a moment that shouldn't exist, but does. Brief. Absolute. Unforgettable.</p>
+        <p>In Japan, the sakura bloom lasts just one week. Crowds gather not despite its transience, but <em>because</em> of it. The Japanese call this awareness of impermanence <strong>mono no aware</strong> — the bittersweet ache of beautiful things passing.</p>
+        <p>The branch rises from the base of the can. Petals fall upward. Because at 3am, gravity works differently.</p>
+        <p>The black background isn't a color choice. It's a statement: this is the void from which your next idea emerges.</p>
+        <p class="closing">For the ones who understand that the most beautiful things are always temporary. And that's exactly why they matter.</p>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<!-- ═══════════════════════════════════════════
+     DOBRA 5 — SPECS
+═══════════════════════════════════════════ -->
+<div class="stack-slot"><section id="specs" class="stack-section" style="z-index:5">
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track" id="marqueeTrack">
+      <span>SAKURA VOID</span><span>刹那</span><span>SAKURA VOID</span><span>桜</span>
+      <span>SAKURA VOID</span><span>刹那</span><span>SAKURA VOID</span><span>桜</span>
+    </div>
+  </div>
+  <div class="specs-inner">
+    <div class="dobra-eyebrow sv-fade" style="margin-bottom:28px">
+      <span class="num">04</span>
+      <span class="bar"></span>
+      <span class="label">Product & Palette</span>
+    </div>
+    <div class="specs-head">
+      <h2 class="specs-title">
+        <span class="sv-reveal-wrap"><span class="sv-reveal-line">The black <em>edition.</em></span></span>
+      </h2>
+      <p class="specs-sub sv-fade">
+        All the energy of the original Sakura Void. The same delicate floral,
+        the same electric acidity. Now sealed inside a void. 450ml of the hour that doesn't exist.
+      </p>
+    </div>
+    <div class="specs-body">
+      <div class="specs-table sv-stagger">
+        <div class="spec-row"><span class="spec-label">Product</span><span class="spec-value">Sakura Void · Black Edition</span></div>
+        <div class="spec-row"><span class="spec-label">Brand</span><span class="spec-value">25h — the hour that doesn't exist</span></div>
+        <div class="spec-row"><span class="spec-label">Volume</span><span class="spec-value">450ml</span></div>
+        <div class="spec-row"><span class="spec-label">Flavor origin</span><span class="spec-value">Tokyo, Japan · 東京</span></div>
+        <div class="spec-row"><span class="spec-label">Flavor profile</span><span class="spec-value">Delicate floral, electric acidity</span></div>
+        <div class="spec-row"><span class="spec-label">Base concept</span><span class="spec-value">Cherry blossom · Setsuna · 刹那</span></div>
+        <div class="spec-row"><span class="spec-label">Can finish</span><span class="spec-value">Matte Black — Void Edition</span></div>
+        <div class="spec-row"><span class="spec-label">Can engravings</span><span class="spec-value">桜 branch · 刹那 · JP · 虚</span></div>
+        <div class="spec-row"><span class="spec-label">Effect</span><span class="spec-value accent">Unlocks +1h</span></div>
+        <div class="spec-row"><span class="spec-label">Drop window</span><span class="spec-value accent">25 hours only · limited</span></div>
+      </div>
+      <div class="color-display sv-stagger">
+        <span class="c-label">Sakura Void — Color System</span>
+        <div class="color-bars">
+          <div class="color-bar-row"><div class="color-bar" style="background:#000000;border:1px solid rgba(255,255,255,0.08)"></div><div class="color-bar-info"><span class="color-bar-name">Void Black</span><span class="color-bar-hex">#000000</span></div></div>
+          <div class="color-bar-row"><div class="color-bar" style="background:#c5677a"></div><div class="color-bar-info"><span class="color-bar-name">Sakura</span><span class="color-bar-hex">#C5677A</span></div></div>
+          <div class="color-bar-row"><div class="color-bar" style="background:#e8d0d8"></div><div class="color-bar-info"><span class="color-bar-name">Petal Mist</span><span class="color-bar-hex">#E8D0D8</span></div></div>
+          <div class="color-bar-row"><div class="color-bar" style="background:#4a1527"></div><div class="color-bar-info"><span class="color-bar-name">Deep Bloom</span><span class="color-bar-hex">#4A1527</span></div></div>
+          <div class="color-bar-row"><div class="color-bar" style="background:linear-gradient(90deg,#060204,#c5677a)"></div><div class="color-bar-info"><span class="color-bar-name">Black to Bloom</span><span class="color-bar-hex">Gradient</span></div></div>
+          <div class="color-bar-row"><div class="color-bar" style="background:#e9e7e2"></div><div class="color-bar-info"><span class="color-bar-name">Paper White</span><span class="color-bar-hex">#E9E7E2</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div>
+
+<!-- ═══════════════════════════════════════════
+     DOBRA 6 — TIMER
+═══════════════════════════════════════════ -->
+<div class="stack-slot" style="height:100vh"><section id="timer" class="stack-section" style="z-index:6">
+  <div class="timer-bg-kanji" aria-hidden="true">桜</div>
+  <div class="timer-glow"></div>
+  <p class="timer-header sv-fade">25h — Sakura Void · Black Edition Drop</p>
+  <p class="timer-subtitle sv-fade">The 25th hour begins in</p>
+  <div class="timer-border-wrap sv-fade">
+    <div class="timer-inner">
+      <span class="timer-label">Countdown · 刹那</span>
+      <div style="position:relative;display:flex;align-items:center;justify-content:center">
+        <div id="ct-display">25:00:00</div>
+        <div id="ct-yours">THE MOMENT IS YOURS</div>
+      </div>
+      <div class="timer-dividers">
+        <div class="timer-unit"><span class="t-val">Hours</span></div>
+        <div class="timer-unit"><span class="t-val">&nbsp;·&nbsp;</span></div>
+        <div class="timer-unit"><span class="t-val">Minutes</span></div>
+        <div class="timer-unit"><span class="t-val">&nbsp;·&nbsp;</span></div>
+        <div class="timer-unit"><span class="t-val">Seconds</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="timer-footer sv-fade">
+    <div class="brand">25h <span>·</span> Sakura Void</div>
+    <div class="tagline">刹那 — the fleeting moment · black edition</div>
+    <div class="timer-cta">
+      <a href="#hero" class="btn-primary" id="timer-notify-btn">Notify Me at Launch</a>
+      <a href="#story" class="btn-ghost">Back to the flavor</a>
+    </div>
+  </div>
+</section></div>
+
+</div><!-- end .stack-wrapper -->
+
+<footer class="footer">
+  <div class="brand">25h <span>·</span> sakura void</div>
+  <div class="copy mono">© 2026 — the hour that doesn't exist · 刹那</div>
+</footer>
+
+<!-- Lenis & GSAP Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   1. LENIS INIT — smooth scroll, COM FALLBACK
+   ─────────────────────────────────────────────────
+   Se o CDN do Lenis falhar (offline/bloqueio), criamos um
+   "shim" que usa o scroll nativo. Sem isso, um erro aqui
+   travava a página inteira no loader (0%).
+═══════════════════════════════════════════════════ */
+let lenis;
+if (typeof Lenis !== 'undefined') {
+  lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    orientation: 'vertical',
+    gestureOrientation: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 1,
+    touchMultiplier: 2,
+    infinite: false,
+  });
+  /* Sync Lenis com GSAP ScrollTrigger */
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+  gsap.ticker.lagSmoothing(0);
+} else {
+  /* Fallback: scroll nativo. Mesma API usada no resto do código. */
+  console.warn('Lenis não carregou — usando scroll nativo (fallback).');
+  lenis = {
+    stop()  { document.documentElement.style.overflow = 'hidden'; },
+    start() { document.documentElement.style.overflow = ''; },
+    raf()   {},
+    on(evt, cb) {
+      if (evt === 'scroll') {
+        window.addEventListener('scroll', () => {
+          const max = document.body.scrollHeight - window.innerHeight;
+          cb({ progress: max > 0 ? window.scrollY / max : 0,
+               scroll: window.scrollY });
+        }, { passive: true });
+      }
+    },
+  };
+  lenis.on('scroll', ScrollTrigger.update);
+}
+
+/* ═══════════════════════════════════════════════════
+   2. CUSTOM SCROLLBAR (Gatzara style right-side bar)
+═══════════════════════════════════════════════════ */
+const svScrollbarThumb = document.getElementById('sv-scrollbar-thumb');
+const svScrollbar      = document.getElementById('sv-scrollbar');
+const barH = svScrollbar.offsetHeight;
+
+lenis.on('scroll', ({ progress }) => {
+  const thumbH = Math.max(10, barH * (window.innerHeight / document.body.scrollHeight));
+  svScrollbarThumb.style.height = thumbH + 'px';
+  svScrollbarThumb.style.top    = progress * (barH - thumbH) + 'px';
+});
+
+/* ═══════════════════════════════════════════════════
+   3. GLOBAL SAKURA PETAL SYSTEM (Canvas 3D)
+═══════════════════════════════════════════════════ */
+const petalCanvas = document.getElementById('sv-petals');
+if (petalCanvas) {
+  const pCtx = petalCanvas.getContext('2d');
+  let pW = window.innerWidth;
+  let pH = window.innerHeight;
+  
+  function resizePetalCanvas() {
+    pW = window.innerWidth;
+    pH = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    petalCanvas.width = pW * dpr;
+    petalCanvas.height = pH * dpr;
+    pCtx.scale(dpr, dpr);
+  }
+  resizePetalCanvas();
+  window.addEventListener('resize', resizePetalCanvas);
+
+  function createPetalAsset(size, blur, isFlower) {
+    const canvas = document.createElement('canvas');
+    const pad = blur * 2 + size * 2;
+    canvas.width = size * 2 + pad * 2;
+    canvas.height = size * 2 + pad * 2;
+    const ctx = canvas.getContext('2d');
+    
+    if (blur > 0) ctx.filter = `blur(${blur}px)`;
+    ctx.translate(canvas.width/2, canvas.height/2);
+    
+    const drawPetal = () => {
+      ctx.beginPath();
+      ctx.moveTo(0, size*0.8); 
+      ctx.bezierCurveTo(-size*0.6, size*0.2, -size*0.8, -size*0.6, -size*0.3, -size*0.8);
+      ctx.bezierCurveTo(-size*0.1, -size*0.9, 0, -size*0.5, 0, -size*0.5); 
+      ctx.bezierCurveTo(0, -size*0.5, size*0.1, -size*0.9, size*0.3, -size*0.8);
+      ctx.bezierCurveTo(size*0.8, -size*0.6, size*0.6, size*0.2, 0, size*0.8);
+      
+      const grad = ctx.createRadialGradient(0, size*0.4, 0, 0, 0, size);
+      grad.addColorStop(0, '#f2a0b6');
+      grad.addColorStop(0.6, '#c5677a');
+      grad.addColorStop(1, '#6a1b35');
+      ctx.fillStyle = grad;
+      ctx.fill();
+      
+      ctx.beginPath();
+      ctx.moveTo(0, size*0.8);
+      ctx.lineTo(0, -size*0.4);
+      ctx.moveTo(0, size*0.5);
+      ctx.lineTo(-size*0.3, -size*0.2);
+      ctx.moveTo(0, size*0.5);
+      ctx.lineTo(size*0.3, -size*0.2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = size*0.06;
+      ctx.stroke();
+    };
+
+    if (isFlower) {
+      for(let i=0; i<5; i++) {
+        drawPetal();
+        ctx.rotate((Math.PI * 2) / 5);
+      }
+      ctx.beginPath();
+      ctx.arc(0,0, size*0.15, 0, Math.PI*2);
+      ctx.fillStyle = '#4a1527';
+      ctx.fill();
+    } else {
+      drawPetal();
+    }
+    return canvas;
+  }
+
+  const petalAssets = [
+    createPetalAsset(12, 0, false), // sharp petal
+    createPetalAsset(16, 2, false), // medium blur petal
+    createPetalAsset(24, 6, false), // large blur petal (close to camera)
+    createPetalAsset(16, 0, true),  // sharp flower
+    createPetalAsset(24, 4, true)   // blurred flower
+  ];
+
+  class PetalParticle {
+    constructor() {
+      this.reset();
+      this.y = Math.random() * pH; 
+    }
+    reset() {
+      this.x = Math.random() * pW;
+      this.y = -100 - Math.random() * 200;
+      this.z = Math.random(); 
+      
+      const rand = Math.random();
+      if (rand > 0.9) this.assetIdx = 3; 
+      else if (rand > 0.85) this.assetIdx = 4; 
+      else if (this.z > 0.8) this.assetIdx = 2; 
+      else if (this.z > 0.4) this.assetIdx = 1; 
+      else this.assetIdx = 0; 
+      
+      this.scale = 0.4 + (this.z * 1.2);
+      if (this.assetIdx >= 3) this.scale *= 0.7; 
+      
+      this.rx = Math.random() * Math.PI * 2;
+      this.ry = Math.random() * Math.PI * 2;
+      this.rz = Math.random() * Math.PI * 2;
+      
+      this.drx = (Math.random() - 0.5) * 0.04;
+      this.dry = (Math.random() - 0.5) * 0.04;
+      this.drz = (Math.random() - 0.5) * 0.04;
+      
+      this.vy = 0.5 + this.z * 1.5 + Math.random();
+      this.vx = (Math.random() - 0.5) * 1.0;
+    }
+    update(scrollDelta) {
+      this.rx += this.drx;
+      this.ry += this.dry;
+      this.rz += this.drz;
+      this.x += this.vx;
+      this.y += this.vy;
+      
+      if (scrollDelta) {
+        this.y -= scrollDelta * (0.1 + this.z * 0.6);
+      }
+      
+      this.x += Math.sin(Date.now() * 0.001 + this.y * 0.01) * 0.4;
+      
+      if (this.y > pH + 150 || this.x < -150 || this.x > pW + 150) {
+        this.reset();
+        this.y = -150;
+      }
+    }
+    draw(ctx) {
+      const asset = petalAssets[this.assetIdx];
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      const sx = Math.cos(this.rx) * this.scale;
+      const sy = Math.cos(this.ry) * this.scale;
+      ctx.rotate(this.rz);
+      ctx.scale(sx, sy);
+      ctx.drawImage(asset, -asset.width/2, -asset.height/2);
+      ctx.restore();
+    }
+  }
+
+  const particles = Array.from({length: 45}, () => new PetalParticle());
+  let lastScrollY = window.scrollY;
+
+  function animatePetals() {
+    pCtx.clearRect(0, 0, pW, pH);
+    const currentScrollY = window.scrollY;
+    const delta = currentScrollY - lastScrollY;
+    
+    particles.forEach(p => {
+      p.update(delta);
+      p.draw(pCtx);
+    });
+    
+    lastScrollY = currentScrollY;
+    requestAnimationFrame(animatePetals);
+  }
+  
+  // Petals only appear from Dobra 3 ("The fleeting moment.") onwards
+  gsap.to(petalCanvas, {
+    opacity: 1,
+    scrollTrigger: {
+      trigger: '#story-slot',
+      start: 'top 60%', 
+      toggleActions: 'play none none reverse',
+    }
+  });
+
+  // Parallax for Story background
+  gsap.to('.story-bg-parallax', {
+    y: '10vh',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#story-slot',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+
+  requestAnimationFrame(animatePetals);
+}
+
+/* ═══════════════════════════════════════════════════
+   REGISTRO DO PLUGIN — precisa vir ANTES de qualquer
+   ScrollTrigger ser criado (o bloco de frames usa).
+═══════════════════════════════════════════════════ */
+gsap.registerPlugin(ScrollTrigger);
+
+/* ═══════════════════════════════════════════════════
+   4. SEQUÊNCIA DE FRAMES NO HERO (canvas + scroll lock)
+   ─────────────────────────────────────────────────
+   COMO FUNCIONA (reconstruído do zero):
+     1. Lenis travado → pré-carrega os 174 frames
+     2. 100% carregado → define a altura do #hero-slot
+        e cria UM ScrollTrigger com pin:true
+     3. pin:true PRENDE o #hero fixo na tela enquanto o
+        scroll percorre SEQUENCE_SCROLL pixels
+     4. nesse intervalo o frame vai de 0 → 173 (scrub 1:1)
+     5. ao chegar no frame 173 o pin solta e a próxima
+        dobra entra — sem buraco preto, sem corte no meio
+═══════════════════════════════════════════════════ */
+const canvas = document.getElementById('hero-canvas');
+
+if (canvas) {
+  const ctx        = canvas.getContext('2d');
+  const frameCount = 174;
+  const heroSlot   = document.getElementById('hero-slot');
+  const heroSection = document.getElementById('hero');
+
+  /* Espaço de scroll dedicado à sequência (em px).
+     Aumente SCROLL_PER_FRAME p/ sequência mais lenta/cinematográfica. */
+  const SCROLL_PER_FRAME = 14;
+  const SEQUENCE_SCROLL   = frameCount * SCROLL_PER_FRAME; // ~2436 px
+
+  const currentFrame = (index) =>
+    `frames/ezgif-frame-${String(index).padStart(3, '0')}.jpg`;
+
+  const images    = [];
+  const frameObj  = { frame: 0 };
+  let   loadedCount = 0;
+
+  const loaderBar  = document.getElementById('loader-bar');
+  const loaderText = document.getElementById('loader-text');
+  const heroLoader = document.getElementById('hero-loader');
+
+  /* ── desenha como object-fit:cover (preenche a tela toda) ── */
+  function drawImageCover(img) {
+    const W = canvas.width, H = canvas.height;
+    const iw = img.naturalWidth  || img.width;
+    const ih = img.naturalHeight || img.height;
+    if (!iw || !ih) return;
+    const r  = Math.max(W / iw, H / ih);
+    const nw = iw * r, nh = ih * r;
+    const ox = (W - nw) / 2, oy = (H - nh) / 2;
+    ctx.clearRect(0, 0, W, H);
+    ctx.drawImage(img, ox, oy, nw, nh);
+  }
+
+  /* ── dimensiona o canvas para os pixels reais da viewport ── */
+  function resizeCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // usa a viewport inteira (o hero ocupa 100vh quando pinado)
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    canvas.width  = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    renderFrame();
+  }
+
+  function renderFrame() {
+    const idx = Math.round(frameObj.frame);
+    const img = images[Math.min(Math.max(idx, 0), images.length - 1)];
+    if (img && img.complete && img.naturalWidth) {
+      drawImageCover(img);
+    }
+  }
+
+  /* ── monta o ScrollTrigger depois que tudo carregou ── */
+  function initFrameSequence() {
+    /* Dá ao slot a altura total: 100vh (hero sticky visível) +
+       SEQUENCE_SCROLL (espaço que o scroll percorre enquanto os
+       frames avançam). O #hero é sticky, então fica grudado no topo
+       durante toda essa altura. */
+    heroSlot.style.height = `calc(100vh + ${SEQUENCE_SCROLL}px)`;
+
+    resizeCanvas();
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      ScrollTrigger.refresh();
+    });
+
+    /* Scrub dos frames vinculado ao scroll do #hero-slot.
+       SEM pin: o sticky do CSS já segura o hero na tela. O
+       ScrollTrigger só traduz progresso de scroll → número do frame. */
+    gsap.to(frameObj, {
+      frame: frameCount - 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: heroSlot,
+        start:   'top top',
+        end:     () => `+=${SEQUENCE_SCROLL}`,
+        scrub:   0.4,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          renderFrame();
+          // hero overlay some quando a sequência termina (>99%)
+          if (self.progress >= 0.99) heroSection.classList.add('hero--done');
+          else                       heroSection.classList.remove('hero--done');
+        },
+        onLeave:     () => heroSection.classList.add('hero--done'),
+        onEnterBack: () => heroSection.classList.remove('hero--done'),
+      }
+    });
+
+    // Hide hero completely once concept has fully covered it
+    gsap.to(heroSection, {
+      scrollTrigger: {
+        trigger: '#concept',
+        start: 'top top',
+        onEnter: () => heroSection.style.visibility = 'hidden',
+        onLeaveBack: () => heroSection.style.visibility = 'visible'
+      }
+    });
+
+    renderFrame(); // frame 0 imediatamente
+  }
+
+  /* ── trava o scroll enquanto pré-carrega ── */
+  lenis.stop();
+  document.body.style.overflow = 'hidden';
+
+  /* ── pré-carrega todos os frames ── */
+  for (let i = 1; i <= frameCount; i++) {
+    const img = new Image();
+    img.src = currentFrame(i);
+
+    const handleLoad = () => {
+      loadedCount++;
+      const pct = Math.round((loadedCount / frameCount) * 100);
+      if (loaderBar)  loaderBar.style.width  = pct + '%';
+      if (loaderText) loaderText.textContent = pct + '%';
+
+      if (loadedCount === frameCount) {
+        // monta a sequência ANTES de liberar o scroll
+        initFrameSequence();
+        ScrollTrigger.refresh();
+
+        // libera o scroll
+        lenis.start();
+        document.body.style.overflow = '';
+
+        // some com o loader
+        if (heroLoader) {
+          heroLoader.style.opacity = '0';
+          setTimeout(() => { heroLoader.style.display = 'none'; }, 500);
+        }
+      }
+    };
+
+    img.onload  = handleLoad;
+    img.onerror = handleLoad; // nunca trava por frame faltando
+    images.push(img);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   5. GSAP — HERO ENTRANCE (line-by-line clip reveal)
+═══════════════════════════════════════════════════ */
+const heroTL = gsap.timeline({ delay: 0.15 });
+
+/* Eyebrow fade */
+heroTL.from('.hero-eyebrow', {
+  opacity: 0, y: 20, duration: 0.8, ease: 'power3.out'
+});
+
+/* H1 lines — stagger clip from bottom */
+heroTL.to('#hero .sv-reveal-line', {
+  y: '0%',
+  duration: 1.1,
+  ease: 'power4.out',
+  stagger: 0.14,
+}, '-=0.5');
+
+/* Descriptor + CTA */
+heroTL.to('#hero .sv-fade', {
+  opacity: 1, y: 0,
+  duration: 1, ease: 'power3.out',
+  stagger: 0.12,
+}, '-=0.6');
+
+/* Background video/canvas entrance — fade in */
+heroTL.from('#heroBg', {
+  opacity: 0, duration: 1.5, ease: 'power2.out',
+}, '-=1.0');
+
+/* Meta row */
+heroTL.to('#heroMeta', {
+  opacity: 1, y: 0, duration: 0.8, ease: 'power2.out',
+}, '-=0.4');
+
+/* ═══════════════════════════════════════════════════
+   6. STACKING CARDS — Gatzara sticky-scale effect
+═══════════════════════════════════════════════════ */
+const stackSections = gsap.utils.toArray('.stack-section');
+
+stackSections.forEach((section, i) => {
+  if (i === stackSections.length - 1) return;
+
+  /* O HERO não entra no efeito de scale-down dos cards.
+     Ele é pinado (sequência de frames) e aplicar scale/opacity
+     nele quebra o pin (encolhe + fica translúcido, vazando o
+     concept por baixo). O empilhamento começa do concept em diante. */
+  if (section.id === 'hero') return;
+
+  const nextSlot = section.closest('.stack-slot').nextElementSibling;
+  if (!nextSlot) return;
+
+  /* Scale down à medida que o próximo slot entra */
+  gsap.to(section, {
+    scale: 0.88,
+    borderRadius: '20px',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: nextSlot,
+      start: 'top 80%',
+      end: 'top top',
+      scrub: 0.8,
+    }
+  });
+
+  /* Leve fade na seção que está sendo empurrada */
+  gsap.to(section, {
+    opacity: 0.65,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: nextSlot,
+      start: 'top 60%',
+      end: 'top top',
+      scrub: 0.8,
+    }
+  });
+});
+
+/* Parallax do kanji do hero: removido.
+   O #heroKanji está DENTRO do #hero pinado, então já acompanha
+   o pin naturalmente. Um ScrollTrigger extra aqui brigaria com
+   o pin e causaria saltos. */
+
+/* ═══════════════════════════════════════════════════
+   7. SECTION REVEALS — sv-reveal-line (clip from bottom)
+   Applied to all non-hero sections
+═══════════════════════════════════════════════════ */
+document.querySelectorAll('section:not(#hero) .sv-reveal-line').forEach(line => {
+  gsap.to(line, {
+    y: '0%',
+    duration: 1.0,
+    ease: 'power4.out',
+    scrollTrigger: {
+      trigger: line,
+      start: 'top 88%',
+      toggleActions: 'play none none none',
+    }
+  });
+});
+
+/* ═══════════════════════════════════════════════════
+   8. FADE-UP — sv-fade elements
+═══════════════════════════════════════════════════ */
+document.querySelectorAll('section:not(#hero) .sv-fade').forEach(el => {
+  gsap.to(el, {
+    opacity: 1, y: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 88%',
+      toggleActions: 'play none none none',
+    }
+  });
+});
+
+/* ═══════════════════════════════════════════════════
+   9. STAGGER CHILDREN — sv-stagger
+═══════════════════════════════════════════════════ */
+document.querySelectorAll('.sv-stagger').forEach(container => {
+  const children = container.children;
+  gsap.to(children, {
+    opacity: 1, y: 0,
+    duration: 0.8,
+    ease: 'power3.out',
+    stagger: 0.10,
+    scrollTrigger: {
+      trigger: container,
+      start: 'top 85%',
+      toggleActions: 'play none none none',
+    }
+  });
+});
+
+/* ═══════════════════════════════════════════════════
+   10. CONCEPT SECTION — Big kanji parallax (Gatzara depth effect)
+═══════════════════════════════════════════════════ */
+gsap.to('#conceptJpBg', {
+  y: -120,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#concept',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: 2,
+  }
+});
+
+/* ═══════════════════════════════════════════════════
+   11. STORY SECTION — Branch parallax (Gatzara depth)
+═══════════════════════════════════════════════════ */
+gsap.to('#storyBranch', {
+  y: -60,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#story',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: 1.5,
+  }
+});
+
+/* Kanji watermark parallax */
+gsap.to('#storyKanjiBg', {
+  y: -80,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#story',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: 2.5,
+  }
+});
+
+/* ═══════════════════════════════════════════════════
+   12. SPECS MARQUEE — horizontal scroll-linked
+   (Gatzara uses horizontal scroll-driven marquees)
+═══════════════════════════════════════════════════ */
+gsap.to('#loreBgParallax', {
+  y: 50,
+  ease: 'none',
+  scrollTrigger: {
+    trigger: '#lore',
+    start: 'top bottom',
+    end: 'bottom top',
+    scrub: true,
+  }
+});
+
+const marqueeTrack = document.getElementById('marqueeTrack');
+/* Clone for seamless loop */
+if (marqueeTrack) {
+  marqueeTrack.innerHTML += marqueeTrack.innerHTML;
+  gsap.to(marqueeTrack, {
+    x: () => -(marqueeTrack.scrollWidth / 2),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#specs',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 0.5,
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   13. LORE — scroll-driven horizontal counter stagger
+   (Gatzara uses scroll-scrub for table reveals)
+═══════════════════════════════════════════════════ */
+gsap.from('.jp-term-row', {
+  opacity: 0,
+  x: -24,
+  duration: 0.7,
+  ease: 'power2.out',
+  stagger: 0.08,
+  scrollTrigger: {
+    trigger: '.jp-terms',
+    start: 'top 85%',
+    toggleActions: 'play none none none',
+  }
+});
+
+/* ═══════════════════════════════════════════════════
+   14. SPEC ROWS — stagger reveal
+═══════════════════════════════════════════════════ */
+gsap.from('.spec-row', {
+  opacity: 0,
+  x: -20,
+  duration: 0.6,
+  ease: 'power2.out',
+  stagger: 0.06,
+  scrollTrigger: {
+    trigger: '.specs-table',
+    start: 'top 85%',
+    toggleActions: 'play none none none',
+  }
+});
+
+gsap.from('.color-bar-row', {
+  opacity: 0,
+  x: 20,
+  duration: 0.6,
+  ease: 'power2.out',
+  stagger: 0.08,
+  scrollTrigger: {
+    trigger: '.color-bars',
+    start: 'top 85%',
+    toggleActions: 'play none none none',
+  }
+});
+
+/* ═══════════════════════════════════════════════════
+   15. TIMER SECTION — scale + fade entrance
+═══════════════════════════════════════════════════ */
+gsap.from('.timer-border-wrap', {
+  scale: 0.92,
+  duration: 1.2,
+  ease: 'power3.out',
+  scrollTrigger: {
+    trigger: '#timer',
+    start: 'top 80%',
+    toggleActions: 'play none none none',
+  }
+});
+
+/* ═══════════════════════════════════════════════════
+   16. COUNTDOWN TIMER LOGIC
+═══════════════════════════════════════════════════ */
+const DURATION_MS = 25 * 60 * 60 * 1000;
+let endTime = localStorage.getItem('sv_drop_end');
+if (!endTime) {
+  endTime = Date.now() + DURATION_MS;
+  localStorage.setItem('sv_drop_end', endTime);
+} else {
+  endTime = parseInt(endTime);
+  if (Date.now() > endTime) {
+    endTime = Date.now() + DURATION_MS;
+    localStorage.setItem('sv_drop_end', endTime);
+  }
+}
+const ctDisplay = document.getElementById('ct-display');
+const ctYours   = document.getElementById('ct-yours');
+function pad(n) { return String(n).padStart(2, '0'); }
+function updateTimer() {
+  const remaining = endTime - Date.now();
+  if (remaining <= 0) {
+    if (ctDisplay) ctDisplay.style.opacity = '0';
+    if (ctYours) ctYours.style.opacity = '1';
+    return;
+  }
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  if (ctDisplay) ctDisplay.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+/* ═══════════════════════════════════════════════════
+   17. NOTIFY ME (stub UX)
+═══════════════════════════════════════════════════ */
+let notified = false;
+const timerNotifyBtn = document.getElementById('timer-notify-btn');
+if (timerNotifyBtn) {
+  timerNotifyBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!notified) {
+      notified = true;
+      const btn = e.currentTarget;
+      btn.textContent = '✓  You\'re on the list';
+      btn.style.cssText += 'background:#1a0a0f;color:var(--sakura);border:1px solid var(--sakura);';
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════════════
+   18. Refresh ScrollTrigger on font load
+═══════════════════════════════════════════════════ */
+document.fonts.ready.then(() => ScrollTrigger.refresh());
+</script>
+</body>
+</html>
